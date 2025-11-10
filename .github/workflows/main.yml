@@ -1,16 +1,18 @@
 name: CI/CD Pipeline
 
 on:
-  push:
+  push: #Триггер для push
     branches: [main]
-  
-  pull_request:
+
+  pull_request: #Триггер для pull-request
     branches: [main]
+
+  workflow_dispatch: #Ручной запуск workflow
 
 jobs:
   build:
     runs-on: self-hosted
 
     steps:
-      name: Checkout code
+    - name: Checkout code
       uses: actions/checkout@v4
