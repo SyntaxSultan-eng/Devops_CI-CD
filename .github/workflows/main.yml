@@ -17,6 +17,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Clear container
+      run: |
+        docker compose down
+
     - name: .env File 
       run: | #Here document, либо echo для каждой строки
         cat >> .env << EOF 
@@ -27,25 +31,34 @@ jobs:
         DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
         DATABASE_PORT=${{ secrets.DATABASE_PORT }}
         DATABASE_AUTH=${{ secrets.DATABASE_AUTH }}
+        APP_PORT=${{ secrets.APP_PORT }}
         EOF
+
     - name: Docker-compose
       run: |
         docker compose up -d
         sleep 60
         docker compose ps
 
-    - name: Wait for database to be ready
-      run: |
-        # Ждем пока база данных будет готова принимать подключения
-        for i in {1..30}; do
-          if docker compose exec db mysql -h127.0.0.1 -u${{ secrets.DATABASE_USER }} -p${{ secrets.DATABASE_PASSWORD }} -e "SELECT 1;" 2>/dev/null; then
-            echo "✅ Database is ready!"
-            break
-          fi
-          echo "⏳ Waiting for database... ($i/30)"
-          sleep 2
-        done
-
     - name: Run Django migrations
       run: |
         docker compose exec web python myproject/manage.py migrate
+    
+    - name: Check_containers
+      run: |
+        if docker-compose ps | grep -q "Up"; then
+          echo "All containers are running"
+        else
+          echo "Some containers failed to start"
+          docker-compose logs
+          exit 1
+        fi
+
+    - name: 1 Test
+      run: |
+        if curl -f http://localhost:${{ secrets.APP_PORT }}/health; then
+          echo "Web application is healthy"
+        else
+          echo "Web application health check failed"
+        exit 1
+        fi
