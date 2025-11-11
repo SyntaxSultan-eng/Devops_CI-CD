@@ -19,7 +19,7 @@ jobs:
 
     - name: Clear container
       run: |
-        docker compose down -v
+        docker compose down
 
     - name: .env File 
       run: | #Here document, либо echo для каждой строки
