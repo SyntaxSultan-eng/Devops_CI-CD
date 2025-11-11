@@ -36,7 +36,7 @@ jobs:
 
     - name: Docker-compose
       run: |
-        docker compose up -d
+        docker compose up -d --build
         sleep 60
         docker compose ps
 
@@ -64,9 +64,10 @@ jobs:
         fi
 
         DATABASE_RESPONSE=$(curl -s http://localhost:${{ secrets.APP_PORT }}/check_db)
-        if [ $? -eq 0 ]&& echo "$DATABASE_RESPONSE" | grep -q "База успешно подключена"; then
+        if [ $? -eq 0 ]&& echo "$DATABASE_RESPONSE" | grep -q "База данных подключена успешно!"; then
           echo "Application database connection working"
         else
           echo "Application database connection failed"
           exit 1
         fi
+    
