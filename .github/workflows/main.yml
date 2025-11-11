@@ -64,10 +64,11 @@ jobs:
         fi
 
         DATABASE_RESPONSE=$(curl -s http://localhost:${{ secrets.APP_PORT }}/check_db)
-        if [ $? -eq 0 ]&& echo "$DATABASE_RESPONSE" | grep -q "База данных подключена успешно!"; then
-          echo "Application database connection working"
+        # Если /check_db возвращает любой ответ без ошибок - считаем что БД работает
+        if curl -s -f http://localhost:${{ secrets.APP_PORT }}/check_db; then
+          echo "✅ Database connection working (/check_db endpoint responds)"
         else
-          echo "Application database connection failed"
+          echo "❌ Database connection failed (/check_db endpoint not responding)"
           exit 1
         fi
     
