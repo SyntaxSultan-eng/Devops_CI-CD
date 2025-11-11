@@ -1,10 +1,10 @@
 name: CI/CD Pipeline
 
 on:
-  push: #Триггер для push
+  push: 
     branches: [main]
 
-  pull_request: #Триггер для pull-request
+  pull_request:
     branches: [main]
 
   workflow_dispatch: #Ручной запуск workflow
@@ -34,7 +34,7 @@ jobs:
         APP_PORT=${{ secrets.APP_PORT }}
         EOF
 
-    - name: Docker-compose
+    - name: Docker-compose 
       run: |
         docker compose up -d --build
         sleep 60
@@ -85,15 +85,14 @@ jobs:
         echo "Web interface count: $WEB_COUNT"
         
         if [ "$DB_COUNT" = "$WEB_COUNT" ]; then
-          echo "Data consistency test passed"
+          echo "test passed"
         else
-          echo "Data consistency test failed"
+          echo "test failed"
           exit 1
         fi
 
     - name: Create test report
       run: |
-        echo "📋 Creating test report..."
         cat > test-report.md << EOF
         # Deployment Test Report
         - Date: $(date)
@@ -105,28 +104,15 @@ jobs:
         - DB_HOST: ${{ secrets.DB_HOST }}
         - DB_NAME: ${{ secrets.DB_NAME }}
         - APP_PORT: ${{ secrets.APP_PORT }}
-        ## Test Results
-        - Database records: $DB_COUNT
-        - Web API records: $WEB_COUNT
         EOF
-
-    - name: Save artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: deployment-artifacts
-        path: |
-          .env
-          test-report.md
-          deployment-logs.txt
-          retention-days: 30
 
     - name: Save Docker logs
       if: always()
       run: |
-        docker-compose logs > deployment-logs.txt
+        docker compose logs > deployment-logs.txt
         docker images > docker-images.txt
         docker ps -a > docker-ps.txt
-        
+
     - name: Upload Docker logs as artifact
       uses: actions/upload-artifact@v4
       with:
@@ -135,4 +121,14 @@ jobs:
           deployment-logs.txt
           docker-images.txt
           docker-ps.txt
+          retention-days: 30
+          
+    - name: Save artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: deployment-artifacts
+        path: |
+          .env
+          test-report.md
+          deployment-logs.txt
           retention-days: 30
