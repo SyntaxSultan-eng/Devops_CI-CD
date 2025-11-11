@@ -33,7 +33,7 @@ jobs:
         docker compose up -d
         sleep 60
         docker compose ps
-        
+
     - name: Wait for database to be ready
       run: |
         # Ждем пока база данных будет готова принимать подключения
@@ -48,4 +48,4 @@ jobs:
 
     - name: Run Django migrations
       run: |
-        docker compose exec web python manage.py migrate
+        docker compose exec web python myproject/manage.py migrate
