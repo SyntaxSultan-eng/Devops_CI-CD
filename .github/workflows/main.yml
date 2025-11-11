@@ -17,10 +17,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: .env File
-      run: |
-        touch .env
-        cat >> .env
+    - name: .env File 
+      run: | #Here document, либо echo для каждой строки
+        cat >> .env << EOF 
         DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
         DATABASE_HOST=${{ secrets.DATABASE_HOST }}
         DATABASE_NAME=${{ secrets.DATABASE_NAME }}
