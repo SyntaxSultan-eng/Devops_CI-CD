@@ -73,6 +73,7 @@ jobs:
     
     - name: 2 Test
       run: |
+        # выдает чистое число без пробелов
         DB_COUNT=$(docker compose exec -T db mysql -u${{ secrets.DATABASE_USER }} -p${{ secrets.DATABASE_PASSWORD }} ${{ secrets.DATABASE_NAME }} -s -N -e "SELECT COUNT(*) FROM myapp_counter;" | tr -d ' ')
     
         # Получаем количество записей через веб-интерфейс (из HTML)

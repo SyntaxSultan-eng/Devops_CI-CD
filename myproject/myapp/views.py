@@ -4,7 +4,7 @@ from .models import Counter
   
 def index(request):
 
-    Counter.objects.create(value=Counter.objects.count() + 1)
+    Counter.objects.create()
     
     total_count = Counter.objects.count()
     
