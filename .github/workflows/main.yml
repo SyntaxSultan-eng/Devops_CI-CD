@@ -42,6 +42,7 @@ jobs:
 
     - name: Run Django migrations
       run: |
+        docker compose exec web python myproject/manage.py makemigrations --noinput
         docker compose exec web python myproject/manage.py migrate
     
     - name: Check_containers
