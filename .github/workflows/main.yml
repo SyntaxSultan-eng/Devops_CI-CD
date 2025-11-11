@@ -90,3 +90,49 @@ jobs:
           echo "Data consistency test failed"
           exit 1
         fi
+
+    - name: Create test report
+      run: |
+        echo "📋 Creating test report..."
+        cat > test-report.md << EOF
+        # Deployment Test Report
+        - Date: $(date)
+        - Application: Healthy ✅
+        - Database: Connected ✅
+        - Data Consistency: Passed ✅
+        - Containers: Running ✅
+        ## Environment Variables
+        - DB_HOST: ${{ secrets.DB_HOST }}
+        - DB_NAME: ${{ secrets.DB_NAME }}
+        - APP_PORT: ${{ secrets.APP_PORT }}
+        ## Test Results
+        - Database records: $DB_COUNT
+        - Web API records: $WEB_COUNT
+        EOF
+
+    - name: Save artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: deployment-artifacts
+        path: |
+          .env
+          test-report.md
+          deployment-logs.txt
+          retention-days: 30
+
+    - name: Save Docker logs
+      if: always()
+      run: |
+        docker-compose logs > deployment-logs.txt
+        docker images > docker-images.txt
+        docker ps -a > docker-ps.txt
+        
+    - name: Upload Docker logs as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: docker-logs
+        path: |
+          deployment-logs.txt
+          docker-images.txt
+          docker-ps.txt
+          retention-days: 30
