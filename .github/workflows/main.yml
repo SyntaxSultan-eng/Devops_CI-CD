@@ -17,6 +17,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: .env File
+      run: |
+        touch .env
+        cat >> .env
+        DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
+        DATABASE_HOST=${{ secrets.DATABASE_HOST }}
+        DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+        DATABASE_USER=${{ secrets.DATABASE_USER }}
+        DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_PORT=${{ secrets.DATABASE_PORT }}
+        DATABASE_AUTH=${{ secrets.DATABASE_AUTH }}
+        EOF
     - name: Docker-compose
       run: |
         docker compose up -d
