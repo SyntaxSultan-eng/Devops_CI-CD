@@ -42,13 +42,6 @@ jobs:
 
     - name: Run Django migrations
       run: |
-        # Полностью очищаем миграции
-        docker compose exec web bash -c "cd /app && find . -path '*/migrations/0*.py' -delete && find . -path '*/migrations/0*.pyc' -delete"
-        # Очищаем историю миграций в базе
-        docker compose exec db mysql -u${{ secrets.DATABASE_USER }} -p${{ secrets.DATABASE_PASSWORD }} ${{ secrets.DATABASE_NAME }} -e "DELETE FROM django_migrations WHERE app = 'myapp';" || true
-        
-        # Создаем и применяем миграции
-        docker compose exec web python myproject/manage.py makemigrations --noinput
         docker compose exec web python myproject/manage.py migrate
     
     - name: Check_containers
