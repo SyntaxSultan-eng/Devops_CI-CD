@@ -101,8 +101,8 @@ jobs:
         - Data Consistency: Passed ✅
         - Containers: Running ✅
         ## Environment Variables
-        - DB_HOST: ${{ secrets.DB_HOST }}
-        - DB_NAME: ${{ secrets.DB_NAME }}
+        - DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        - DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
         - APP_PORT: ${{ secrets.APP_PORT }}
         EOF
 
@@ -121,7 +121,7 @@ jobs:
           deployment-logs.txt
           docker-images.txt
           docker-ps.txt
-          retention-days: 30
+        retention-days: 30
           
     - name: Save artifacts
       uses: actions/upload-artifact@v4
@@ -131,4 +131,15 @@ jobs:
           .env
           test-report.md
           deployment-logs.txt
-          retention-days: 30
+        retention-days: 30
+      
+    - name: Check if .env exists
+      run: |
+        ls -la
+        if [ -f ".env" ]; then
+          echo ".env file exists"
+          cat .env
+        else
+          echo ".env file does not exist"
+          exit 1
+        fi
