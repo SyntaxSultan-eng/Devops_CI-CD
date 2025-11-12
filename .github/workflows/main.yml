@@ -130,16 +130,5 @@ jobs:
         path: |
           .env
           test-report.md
-          deployment-logs.txt
         retention-days: 30
-      
-    - name: Check if .env exists
-      run: |
-        ls -la
-        if [ -f ".env" ]; then
-          echo ".env file exists"
-          cat .env
-        else
-          echo ".env file does not exist"
-          exit 1
-        fi
+
