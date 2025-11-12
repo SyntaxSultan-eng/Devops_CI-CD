@@ -34,19 +34,6 @@ jobs:
         APP_PORT=${{ secrets.APP_PORT }}
         EOF
 
-    - name: test File 
-      run: | #Here document, либо echo для каждой строки
-        cat >> test.txt << EOF 
-        DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
-        DATABASE_HOST=${{ secrets.DATABASE_HOST }}
-        DATABASE_NAME=${{ secrets.DATABASE_NAME }}
-        DATABASE_USER=${{ secrets.DATABASE_USER }}
-        DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
-        DATABASE_PORT=${{ secrets.DATABASE_PORT }}
-        DATABASE_AUTH=${{ secrets.DATABASE_AUTH }}
-        APP_PORT=${{ secrets.APP_PORT }}
-        EOF
-
     - name: Docker-compose 
       run: |
         docker compose up -d --build
@@ -141,7 +128,6 @@ jobs:
       with:
         name: deployment-artifacts
         path: |
-          test.txt
           test-report.md
           deployment-logs.txt
         retention-days: 30
