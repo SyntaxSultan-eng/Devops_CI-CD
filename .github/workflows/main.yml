@@ -23,7 +23,7 @@ jobs:
 
     - name: .env File 
       run: | #Here document, либо echo для каждой строки
-        cat >> .env << EOF 
+        cat >> test.txt << EOF 
         DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
         DATABASE_HOST=${{ secrets.DATABASE_HOST }}
         DATABASE_NAME=${{ secrets.DATABASE_NAME }}
@@ -128,7 +128,8 @@ jobs:
       with:
         name: deployment-artifacts
         path: |
-          .env
+          test.txt
           test-report.md
+          deployment-logs.txt
         retention-days: 30
 
